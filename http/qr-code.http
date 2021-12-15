@@ -1,0 +1,32 @@
+
+
+@token=AWJxtvi8g1XQru1SGx7Y0UW7BVCBqWcnzrSLUrtnfNVutLF4Ck6yTfnxqZPsfe0Uv1hbKtjvSPIGxM5zyXC19f68jeU9hZ9rxcZFYq6byzrP6WqTRe37VpbuQFwTiH76
+@host=http://localhost:5000
+
+###
+GET {{host}}/shops
+Authorization: {{token}}
+
+###
+GET {{host}}/shops/1
+Authorization: {{token}}
+
+###
+POST {{host}}/shops
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Wicho",
+    "description": ""
+}
+
+###
+PATCH {{host}}/shops/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Wicho2",
+    "description": ""
+}

@@ -1,0 +1,36 @@
+
+@host=http://localhost:5000
+GET {{host}}/health
+
+###
+POST {{host}}/auth/sign-up
+Content-Type: application/json
+
+{
+    "name": "julio",
+    "last_name": "torres",
+    "phone": "+573013819315",
+    "email": "jtorres990@gmail.com",
+    "password": "MierdaMonda-1"
+}
+
+###
+POST {{host}}/auth/sign-in
+Content-Type: application/json
+Authorization: 4j9O1oyJKAIWThkIh1f1XyDe48dNs6gK0F1WxqOnNrIKt5pgLi7xMnT1YXvFE7RunCrrpF9CxdB5Ea3uAXHjuKcoSFQyuoBZbw2aVyT6AANmArunEbDblvoch0uSPqVI
+
+{
+    "email": "jtorres990@gmail.com",
+    "password": "MierdaMonda-1"
+}
+
+###
+POST {{host}}/auth/verification-code
+Content-Type: application/json
+
+{
+    "email": "jtorres990@gmail.com",
+    "phone": "+573013819315",
+    "code": "ETF618"
+}
+
