@@ -1,8 +1,7 @@
 
 import * as path from "path";
-import { Rol } from "src/entities/rol.entity";
 import { Shop } from "src/entities/shop.entity";
-import { User } from "src/entities/user.entity";
+import { Owner, User } from "src/entities/user.entity";
 import { Configuration } from "src/types/configuration";
 
 export default function getConfig(): Configuration {
@@ -15,6 +14,7 @@ export default function getConfig(): Configuration {
         secret: process.env.SECRET,
         redisUrl: process.env.REDIS_URL,
         baseUrl: process.env.BASE_URL,
+        pageSize: Number.parseInt(process.env.PAGE_SIZE) || 10,
         database: {
             type: process.env.DATABASE_DRIVER as any,
             host: process.env.DATABASE_HOST || 'localhost',
@@ -24,7 +24,7 @@ export default function getConfig(): Configuration {
             database: process.env.DATABASE_NAME || '',
             synchronize: process.env.DATABASE_SYNC === 'true',
             
-            entities: [Rol, User, Shop]
+            entities: [User, Owner, Shop]
         },
         aws: {
             region: process.env.AWS_DEFAULT_REGION,

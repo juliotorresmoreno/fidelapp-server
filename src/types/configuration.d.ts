@@ -9,6 +9,7 @@ export type Configuration = {
     database: TypeOrmModuleOptions;
     redisUrl: string;
     baseUrl: string;
+    pageSize: number;
     aws?: {
         region: string;
         credentials?: CredentialsOptions

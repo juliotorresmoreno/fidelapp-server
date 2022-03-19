@@ -1,23 +1,23 @@
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import getL18N from 'src/l18n/l18n.lang';
 import * as randomstring from 'randomstring';
-import { SignInDto, SignUpDto, VerificationCodeDto } from './auth.dto';
+import { PhoneSignInDto, SignInDto, SignUpDto, VerificationCodeDto } from './auth.dto';
 import { Connection, Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
-import { Rol } from 'src/entities/rol.entity';
 import { SecureService } from 'src/components/secure/secure.service';
 import * as crypto from 'crypto';
 import { AwsSnsService } from 'src/components/aws-sns/aws-sns.service';
 import { AwsSesService } from 'src/components/aws-ses/aws-ses.service';
 import { EmailEventSignUp } from 'src/common/events';
 import { RedisService } from 'src/components/redis/redis.service';
-import { Roles } from 'src/types/roles';
+import * as createHttpError from 'http-errors';
+import { RequestWithSession } from 'src/types/http';
 
 @Injectable()
 export class AuthService {
+    private l18n = getL18N('ES');
     private usersRepository: Repository<User>;
-    private rolesRepository: Repository<Rol>;
 
     constructor(
         private readonly connection: Connection,
@@ -27,20 +27,6 @@ export class AuthService {
         private readonly redisService: RedisService
     ) {
         this.usersRepository = this.connection.getRepository(User);
-        this.rolesRepository = this.connection.getRepository(Rol);
-    }
-
-    async getOrCreateUserRol(rol: Roles) {
-        let _rol = await this.rolesRepository.findOne({
-            cache: true,
-            where: { name: rol }
-        });
-        if (_rol) return _rol;
-        _rol = await this.rolesRepository.save({
-            name: rol,
-            description: ''
-        });
-        return _rol;
     }
 
     async hash(password: string) {
@@ -64,96 +50,37 @@ export class AuthService {
         })
     }
 
-    async signIn(payload: SignInDto) {
-        const l18n = getL18N('ES');
-
-        const exists = await this.usersRepository.findOne({
-            email: payload.email
+    async phoneSignIn(payload: PhoneSignInDto) {
+        let exists = await this.usersRepository.findOne({
+            phone: payload.phone
         });
-        if (!exists) throw new UnauthorizedException();
-        await this.verify(payload.password, exists.password)
-            .then(result => {
-                if (!result) throw new UnauthorizedException();
-            })
-            .catch((err) => {
-                if (err instanceof UnauthorizedException)
-                    throw err;
-                throw new UnauthorizedException();
-            });
-
-        const sessionToken = await this.generateSessionToken(exists);
-
-        const result = await this.usersRepository.findOne({ id: exists.id }, {
-            relations: ['rol'],
-            cache: true,
-            select: ['id', 'name', 'last_name', 'phone', 'photo_url']
-        });
-        if (!result) return;
-        return {
-            ...result,
-            token: sessionToken,
-            rol: {
-                id: result.rol?.id,
-                name: result.rol?.name
-            }
-        };
-    }
-
-    async signUp(payload: SignUpDto) {
-        const l18n = getL18N('ES');
-
         const validation_code = await this.generateRandomString(6);
-        payload.password = await this.hash(payload.password);
-        const rolGestor = await this.getOrCreateUserRol(Roles.GESTOR);
-        const record = await this.usersRepository.save({
-            ...payload,
-            rol: rolGestor,
-            validation_code
-        });
+        if (!exists) {
+            await this.usersRepository.save({
+                phone: payload.phone,
+                validation_code,
+                verified: false
+            });
+            exists = await this.usersRepository.findOne({
+                phone: payload.phone
+            });
+        } else {
+            await this.usersRepository.update({ id: exists.id }, {
+                validation_code: validation_code,
+                verified: true
+            });
+        }
 
-        const emailEventSignUp = new EmailEventSignUp({
-            name: record.name,
-            last_name: record.last_name,
-            code: validation_code
-        });
-        this.awsSesService.sendEMAIL(
-            record.email,
-            emailEventSignUp.subject,
-            emailEventSignUp.contentHTML
-        );
-
-        const sessionToken = await this.generateSessionToken(record);
-
-        if (!record) return;
-        const result = await this.usersRepository.findOne({
-            relations: ['rol'],
-            select: [
-                'id',
-                'name',
-                'last_name',
-                'email',
-                'phone',
-                'photo_url',
-                'verified',
-                'rol'
-            ],
-            where: {
-                id: record.id
-            }
-        });
-        return {
-            ...result,
-            token: sessionToken,
-            rol: {
-                id: result.rol?.id,
-                name: result.rol?.name
-            }
-        };
+        const message = this.l18n.sms.accountValidation(validation_code);
+        await this.awsSnsService.sendSMS(payload.phone, message)
+            .catch(err => {
+                throw new createHttpError.InternalServerError('No fue posible enviar el sms');
+            });
     }
 
     async verificationCode(payload: VerificationCodeDto) {
         if (!payload.email && !payload.phone)
-            throw new UnauthorizedException();
+            throw new createHttpError.Unauthorized();
         const query = payload.email
             ? { email: payload.email }
             : { phone: payload.phone };
@@ -162,12 +89,30 @@ export class AuthService {
             validation_code: payload.code,
             deleted_at: null
         });
-        if (!exists) return;
+        if (!exists) {
+            throw new createHttpError.Unauthorized();
+        };
 
         await this.usersRepository.update({ id: exists.id }, {
             validation_code: '',
             verified: true
         });
+
+        const sessionToken = await this.generateSessionToken(exists);
+
+        return this.getSession(exists.id, sessionToken);
+    }
+
+    async getSession(id: number, sessionToken: string) {
+        const session = await this.usersRepository.findOne(id, {
+            select: [
+                'id', 'name', 'last_name', 'email', 'photo_url', 'rol'
+            ]
+        });
+        return {
+            ...session,
+            token: sessionToken
+        }
     }
 
     async generateSessionToken(user: User) {

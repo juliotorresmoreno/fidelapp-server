@@ -17,10 +17,10 @@ export function Authentication(...permit: Roles[]): MethodDecorator {
 
             if (!req || !req.session)
                 throw new UnauthorizedException();
-            const exists = permit.find((rol) => {
-                return req.session.rol?.name === rol;
-            });
-            //if (!exists) throw new UnauthorizedException();
+            if (permit.length > 0) {
+                const exists = permit.find((rol) => req.session.rol === rol);
+                if (!exists) throw new UnauthorizedException();
+            }
 
             return childFunction.apply(this, args);
         };;

@@ -15,7 +15,7 @@ export class QrCodeController {
   ) { }
 
   @Get('generate/:shopId')
-  @Authentication(Roles.GESTOR)
+  @Authentication('seller')
   async generate(@Req() { session }: RequestWithSession, @Param('shopId') shopId: string) {
     const shop = await this.shopService.findOne(session, +shopId);
     if (!shop) throw new UnauthorizedException();

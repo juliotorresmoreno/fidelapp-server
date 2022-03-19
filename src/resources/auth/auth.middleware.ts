@@ -8,40 +8,46 @@ import { Connection, Repository } from 'typeorm';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  private usersRepository: Repository<User>;
+    private usersRepository: Repository<User>;
 
-  constructor(
-    private readonly connection: Connection,
-    private readonly redisService: RedisService
-  ) {
-    this.usersRepository = this.connection.getRepository(User);
-  }
-
-  async use(req: RequestWithSession, res: Response, next: NextFunction) {
-    const token = req.headers.authorization;
-    const userId = await this.redisService.get(`session:${token}`)
-    const user = userId
-      ? await this.usersRepository.findOne({
-        relations: ['rol'],
-        select: [
-          'id',
-          'name',
-          'last_name',
-          'phone',
-          'photo_url',
-          'verified',
-          'rol'
-        ],
-        where: {
-          id: userId,
-          deleted_at: null
-        }
-      })
-      : null;
-    if (user) {
-      await this.redisService.set(token, userId);
-      req.session = user;
+    constructor(
+        private readonly connection: Connection,
+        private readonly redisService: RedisService
+    ) {
+        this.usersRepository = this.connection.getRepository(User);
     }
-    next();
-  }
+
+    async use(req: RequestWithSession, res: Response, next: NextFunction) {
+        let token = req.headers.authorization;
+        if (typeof token !== 'string' || token.substring(0, 6) !== 'Bearer') {
+            next();
+            return;
+        }
+        token = token.substring(7);
+        const sessionKey = `session:${token}`;
+        const userId = await this.redisService.get(sessionKey)
+        const user = userId
+            ? await this.usersRepository.findOne({
+                select: [
+                    'id',
+                    'name',
+                    'last_name',
+                    'phone',
+                    'photo_url',
+                    'verified',
+                    'rol'
+                ],
+                where: {
+                    id: userId,
+                    deleted_at: null
+                }
+            })
+            : null;
+        if (user) {
+            await this.redisService.set(sessionKey, userId);
+            req.session = user;
+            req.token = token;
+        }
+        next();
+    }
 }
