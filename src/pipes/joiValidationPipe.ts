@@ -1,9 +1,8 @@
 import {
     PipeTransform,
-    Injectable,
-    // ArgumentMetadata,
-    BadRequestException,
+    Injectable
 } from '@nestjs/common';
+import createHttpError from 'http-errors';
 import { ObjectSchema } from 'joi';
 
 type TransformValues = string | number | boolean;
@@ -18,7 +17,7 @@ export class JoiValidationPipe implements PipeTransform {
     transform(value: TransformValues) {
         const { error } = this.schema.validate(value);
         if (error) {
-            throw new BadRequestException(
+            throw new createHttpError.BadRequest(
                 error.message ? `${error.message}` : `Validation failed`,
             );
         }

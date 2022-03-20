@@ -1,5 +1,6 @@
-import { UnauthorizedException } from "@nestjs/common";
+
 import { IncomingMessage } from "http";
+import createHttpError from "http-errors";
 import { RequestWithSession } from "src/types/http";
 import { Roles } from "src/types/roles";
 
@@ -16,14 +17,14 @@ export function Authentication(...permit: Roles[]): MethodDecorator {
                 .find(arg => arg instanceof IncomingMessage);
 
             if (!req || !req.session)
-                throw new UnauthorizedException();
+                throw new createHttpError.Unauthorized();
             if (permit.length > 0) {
                 const exists = permit.find((rol) => req.session.rol === rol);
-                if (!exists) throw new UnauthorizedException();
+                if (!exists) throw new createHttpError.Unauthorized();
             }
 
             return childFunction.apply(this, args);
-        };;
+        };
         return descriptor;
     }
 }
