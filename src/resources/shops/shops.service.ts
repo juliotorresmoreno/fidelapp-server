@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseException } from 'src/common/exception';
 import { Shop } from 'src/entities/shop.entity';
 import { User } from 'src/entities/user.entity';
-import { Connection, FindManyOptions, Repository } from 'typeorm';
+import { Connection, FindCondition, FindConditions, FindManyOptions, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
@@ -28,37 +28,25 @@ export class ShopService {
             });
     }
 
-    findOne(session: User, id: number) {
-        const select = ['id', 'name', 'description', 'creation_at', 'updated_at'];
-        return this.shopsRepository.createQueryBuilder('shop')
-            .select(select.map(col => `shop.${col}`))
-            .where({
-                id,
-                owner: { id: session.id },
-                deleted_at: null
-            })
-            .getOne()
+    findOne(query: FindManyOptions<Shop> = {}) {
+        return this.shopsRepository.findOne(query)
             .catch(() => {
                 throw new DatabaseException();
             });
     }
 
-    update(session: User, id: number, updateShopDto: QueryDeepPartialEntity<Shop>) {
-        return this.shopsRepository.update({
-            id,
-            owner: { id: session.id }
-        }, updateShopDto)
-            .then(() => this.findOne(session, id))
+    update(conditions: FindConditions<Shop>, updateShopDto: QueryDeepPartialEntity<Shop>) {
+        return this.shopsRepository.update(conditions, updateShopDto)
+            .then(() => this.findOne({
+                where: conditions
+            }))
             .catch(() => {
                 throw new DatabaseException();
             });
     }
 
-    remove(session: User, id: number) {
-        return this.shopsRepository.softDelete({
-            id,
-            owner: { id: session.id }
-        })
+    remove(conditions: FindConditions<Shop>) {
+        return this.shopsRepository.softDelete(conditions)
             .catch(() => {
                 throw new DatabaseException();
             });

@@ -82,19 +82,30 @@ export class ShopController {
     @Get(':id')
     @Authentication('seller')
     findOne(@Request() { session }: RequestWithSession, @Param('id') id: string) {
-        return this.shopService.findOne(session, +id);
+        return this.shopService.findOne({
+            where: {
+                id: Number.parseInt(id),
+                owner: { id: session.id }
+            }
+        });
     }
 
     @Patch(':id')
     @Authentication('seller')
     @UsePipes(new JoiValidationPipe(updateSchema))
     update(@Request() { session }: RequestWithSession, @Param('id') id: string, @Body() updateShopDto: UpdateShopDto) {
-        return this.shopService.update(session, +id, updateShopDto);
+        return this.shopService.update({
+            id: Number.parseInt(id),
+            owner: { id: session.id }
+        }, updateShopDto);
     }
 
     @Delete(':id')
     @Authentication('seller')
     remove(@Request() { session }: RequestWithSession, @Param('id') id: string) {
-        return this.shopService.remove(session, +id);
+        return this.shopService.remove({
+            id: Number.parseInt(id),
+            owner: { id: session.id }
+        });
     }
 }

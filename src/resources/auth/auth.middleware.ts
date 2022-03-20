@@ -18,12 +18,14 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     async use(req: RequestWithSession, res: Response, next: NextFunction) {
-        let token = req.headers.authorization;
-        if (typeof token !== 'string' || token.substring(0, 6) !== 'Bearer') {
+        let token = req.headers.authorization || req.query.authorization;
+        if (typeof token !== 'string') {
             next();
             return;
         }
-        token = token.substring(7);
+        token = token.substring(0, 6) === 'Bearer'
+            ? token.substring(7)
+            : token;
         const sessionKey = `session:${token}`;
         const userId = await this.redisService.get(sessionKey)
         const user = userId

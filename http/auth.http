@@ -1,7 +1,7 @@
 
 @host=http://localhost:5001
 
-@authorization=TjMSxD4OlBNjBv3wo5i5KHflrOnrPoTXfWuy6RDnvTKhZex4zUcWU2iULgtthCo8bt55vsMSfGgLaSTovusRYciDj4mauQroiOHphGUUfCmZKP2CQNpsaMYQOxfkyWxs
+@authorization=StYcYXjNhN2ofxRzyNXo5s8c1oqOEXcT0QDTrqtPhuj7bju1wE2xP5gI6vLep6MYfyHn9hhiaRTeOF8R3DNix7774yX4iJc0RPffZ52uFAgBTtgGC3go3iTn8CtVR0z8
 
 ###
 GET {{host}}/health
@@ -88,3 +88,10 @@ Authorization: Bearer {{authorization}}
 GET {{host}}/shops/me
 Content-Type: application/json
 Authorization: Bearer {{authorization}}
+
+
+###
+GET {{host}}/qr-code/generate
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
