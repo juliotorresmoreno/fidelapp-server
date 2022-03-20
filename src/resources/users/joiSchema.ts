@@ -9,3 +9,7 @@ export const updateProfileSchema = Joi.object({
     photo: Joi.string(),
     rol: Joi.string().valid('seller', 'client')
 });
+
+export const registerShopSchema = Joi.object({
+    shop_id: Joi.number().required()
+});

@@ -24,7 +24,8 @@ export default function getConfig(): Configuration {
             database: process.env.DATABASE_NAME || '',
             synchronize: process.env.DATABASE_SYNC === 'true',
             
-            entities: [User, Owner, Shop]
+            entities: [User, Owner, Shop],
+            logging: 'all'
         },
         aws: {
             region: process.env.AWS_DEFAULT_REGION,

@@ -45,3 +45,12 @@ export class UpdateProfileDto {
     })
     rol?: Roles;
 }
+
+export class RegisterShopDto {
+    @ApiProperty({
+        description: `Shop's identifier`,
+        example: 95845,
+    })
+    shop_id: number;
+}
+

@@ -1,7 +1,7 @@
 
 @host=http://localhost:5001
 
-@authorization=StYcYXjNhN2ofxRzyNXo5s8c1oqOEXcT0QDTrqtPhuj7bju1wE2xP5gI6vLep6MYfyHn9hhiaRTeOF8R3DNix7774yX4iJc0RPffZ52uFAgBTtgGC3go3iTn8CtVR0z8
+@authorization=OyFMNJkozeC0ZAwzhrBhiMwtcrqtfRnXyJcgX8XpPUxaqGh6sSwtjzpLcF5l4rs4QlvgEKG4v7MqralnuWDk7wVVb6wU4wVdfQsRWzI15an107QQVRsVkm7uustuMgql
 
 ###
 GET {{host}}/health
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
     "phone": "+573013819315",
-    "code": "z2CwCU"
+    "code": "DG6Trd"
 }
 
 ###
@@ -36,6 +36,15 @@ Authorization: Bearer {{authorization}}
 
 {
     "rol": "seller"
+}
+
+###
+PATCH {{host}}/users/profile
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "rol": "client"
 }
 
 ###
@@ -95,3 +104,11 @@ GET {{host}}/qr-code/generate
 Content-Type: application/json
 Authorization: Bearer {{authorization}}
 
+###
+POST {{host}}/users/subscribe
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "shop_id": 1
+}

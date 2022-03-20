@@ -30,6 +30,7 @@ export class QrCodeController {
             generate: new Date().toISOString()
         });
         const buff = await this.qrCodeService.generate(value);
+        res.header('Content-Disposition', 'attachment; filename="qr.png"');
         res.send(buff);
     }
 }

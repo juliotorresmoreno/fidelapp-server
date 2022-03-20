@@ -27,7 +27,7 @@ export class AuthMiddleware implements NestMiddleware {
             ? token.substring(7)
             : token;
         const sessionKey = `session:${token}`;
-        const userId = await this.redisService.get(sessionKey)
+        const userId = await this.redisService.get(sessionKey);
         const user = userId
             ? await this.usersRepository.findOne({
                 select: [
