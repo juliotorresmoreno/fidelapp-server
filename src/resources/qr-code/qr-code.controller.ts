@@ -1,6 +1,7 @@
 
-import { Controller, Get, Req, Response, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Req, Response } from '@nestjs/common';
 import express from 'express';
+import * as createHttpError from 'http-errors';
 import { RequestWithSession } from 'src/types/http';
 import { Authentication } from 'src/utils/secure';
 import { ShopService } from '../shops/shops.service';
@@ -21,7 +22,7 @@ export class QrCodeController {
                 owner: { id: session.id }
             }
         });
-        if (!shop) throw new UnauthorizedException();
+        if (!shop) throw new createHttpError.Unauthorized();
         const value = JSON.stringify({
             id: shop.id,
             identify: shop.identify,
