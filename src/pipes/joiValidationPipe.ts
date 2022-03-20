@@ -2,7 +2,7 @@ import {
     PipeTransform,
     Injectable
 } from '@nestjs/common';
-import createHttpError from 'http-errors';
+import * as createHttpError from 'http-errors';
 import { ObjectSchema } from 'joi';
 
 type TransformValues = string | number | boolean;

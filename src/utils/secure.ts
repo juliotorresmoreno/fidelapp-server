@@ -1,6 +1,6 @@
 
 import { IncomingMessage } from "http";
-import createHttpError from "http-errors";
+import * as createHttpError from "http-errors";
 import { RequestWithSession } from "src/types/http";
 import { Roles } from "src/types/roles";
 

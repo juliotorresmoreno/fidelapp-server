@@ -1,7 +1,7 @@
 
 import { Controller, Get, Req, Response } from '@nestjs/common';
 import express from 'express';
-import createHttpError from 'http-errors';
+import * as createHttpError from 'http-errors';
 import { RequestWithSession } from 'src/types/http';
 import { Authentication } from 'src/utils/secure';
 import { ShopService } from '../shops/shops.service';
