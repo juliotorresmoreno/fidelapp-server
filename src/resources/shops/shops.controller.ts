@@ -33,7 +33,7 @@ export class ShopController {
     create(@Request() { session }: RequestWithSession, @Body() createShopDto: CreateShopDto) {
         return this.shopService.create(session, {
             ...createShopDto,
-            identify: createShopDto.identify.toLowerCase()
+            identify: createShopDto.identify.replace(/\s+/g, '').toLowerCase()
         });
     }
 

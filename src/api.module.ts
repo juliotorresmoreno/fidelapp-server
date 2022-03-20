@@ -11,6 +11,7 @@ import { AwsSesModule } from './components/aws-ses/aws-ses.module';
 import { HbsRemplateModule } from './components/hbs-remplate/hbs-remplate.module';
 import { QrCodeModule } from './resources/qr-code/qr-code.module';
 import { ShopsModule } from './resources/shops/shops.module';
+import { ProductsModule } from './resources/products/products.module';
 
 @Module({
     imports: [
@@ -24,7 +25,8 @@ import { ShopsModule } from './resources/shops/shops.module';
         RedisModule,
         AwsSnsService,
         AwsSesModule,
-        HbsRemplateModule
+        HbsRemplateModule,
+        ProductsModule
     ],
     providers: [SecureService]
 })

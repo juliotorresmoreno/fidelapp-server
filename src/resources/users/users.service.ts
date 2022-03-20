@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { Connection, Repository } from 'typeorm';
@@ -22,7 +23,7 @@ export class UsersService {
             ],
             where: { id, deleted_at: null },
             relations: ['shops']
-        })
+        });
         await this.usersRepository.save({
             id,
             shops: [
