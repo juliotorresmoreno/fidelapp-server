@@ -7,7 +7,7 @@ import {
     JoinColumn,
     ManyToOne
 } from 'typeorm';
-import { Shop } from './shop.entity';
+import { ShopLite } from './shop.entity';
 import { Owner } from './user.entity';
 
 @Entity({
@@ -18,16 +18,16 @@ export class Product {
     @PrimaryGeneratedColumn('increment')
     id?: number;
 
-    @ManyToOne(() => Shop, shop => shop.name, {
+    @ManyToOne(() => ShopLite, shop => shop.name, {
         eager: false,
         nullable: false
     })
-    @JoinColumn({ name: 'owner_id' })
-    shop?: Shop;
+    @JoinColumn({ name: 'shop_id' })
+    shop?: ShopLite;
 
     @ManyToOne(() => Owner, (user: Owner) => `${user.name} ${user.last_name}`, {
         eager: false,
-        nullable: false,
+        nullable: false
     })
     @JoinColumn({ name: 'owner_id' })
     owner?: Owner;
@@ -40,8 +40,7 @@ export class Product {
 
     @Column({
         type: 'varchar',
-        length: 100,
-        unique: true
+        length: 100
     })
     name: string;
 
@@ -57,3 +56,42 @@ export class Product {
     @DeleteDateColumn({ type: 'timestamptz' })
     deleted_at?: Date;
 }
+
+@Entity({
+    name: 'products',
+    synchronize: false
+})
+export class ProductLite {
+    @PrimaryGeneratedColumn('increment')
+    id?: number;
+
+    @ManyToOne(() => ShopLite, shop => shop.name, {
+        eager: false,
+        nullable: false
+    })
+    @JoinColumn({ name: 'shop_id' })
+    shop?: ShopLite;
+
+    @Column({ name: 'shop_id' })
+    shop_id?: number;
+
+    @ManyToOne(() => Owner, (user: Owner) => `${user.name} ${user.last_name}`, {
+        eager: false,
+        nullable: false,
+    })
+    @JoinColumn({ name: 'owner_id' })
+    owner?: Owner;
+
+    @Column()
+    sku: string;
+
+    @Column()
+    name: string;
+
+    @Column()
+    description: string;
+
+    @Column()
+    deleted_at?: Date;
+}
+

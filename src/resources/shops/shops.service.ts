@@ -2,8 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseException } from 'src/common/exception';
 import { Shop } from 'src/entities/shop.entity';
-import { User } from 'src/entities/user.entity';
-import { Connection, FindCondition, FindConditions, FindManyOptions, Repository } from 'typeorm';
+import { Session } from 'src/entities/user.entity';
+import { Connection, FindConditions, FindManyOptions, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
@@ -14,10 +14,9 @@ export class ShopService {
         this.shopsRepository = this.connection.getRepository(Shop);
     }
 
-    create(session: User, createShopDto: Shop | { owner?: User }) {
+    create(createShopDto: Shop | { owner: Session }) {
         return this.shopsRepository.save({
-            ...createShopDto,
-            owner: session
+            ...createShopDto
         });
     }
 
@@ -35,8 +34,8 @@ export class ShopService {
             });
     }
 
-    update(conditions: FindConditions<Shop>, updateShopDto: QueryDeepPartialEntity<Shop>) {
-        return this.shopsRepository.update(conditions, updateShopDto)
+    update(conditions: FindConditions<Shop>, payload: QueryDeepPartialEntity<Shop>) {
+        return this.shopsRepository.update(conditions, payload)
             .then(() => this.findOne({
                 where: conditions
             }))

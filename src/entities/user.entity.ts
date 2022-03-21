@@ -6,12 +6,14 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     ManyToMany,
-    JoinTable,
+    JoinTable
 } from 'typeorm';
 import { Shop } from './shop.entity';
 
+const tableName = 'users';
+
 @Entity({
-    name: 'users',
+    name: tableName,
     synchronize: true
 })
 export class User {
@@ -56,7 +58,15 @@ export class User {
 
     @ManyToMany(() => Shop)
     @JoinTable({
-        name: 'users_shops'
+        name: 'users_shops',
+        joinColumn: {
+            name: 'userId',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'shopId',
+            referencedColumnName: 'id'
+        }
     })
     shops?: Shop[];
 
@@ -70,40 +80,63 @@ export class User {
     deleted_at?: Date;
 }
 
-@Entity('users', {
+@Entity(tableName, {
     synchronize: false
 })
 export class Owner {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ default: false })
+    @Column()
     verified: boolean;
 
-    @Column({ type: 'varchar', length: 100, default: '', nullable: true })
+    @Column()
     name: string;
 
-    @Column({ type: 'varchar', length: 100, default: '', nullable: true })
+    @Column()
     last_name: string;
 
-    @Column({ type: 'varchar', length: 300, default: '', nullable: true })
+    @Column()
     email: string;
 
-    @Column({ type: 'varchar', length: 1000, default: '', nullable: true })
+    @Column()
     photo_url: string;
 
-    @Column({
-        type: 'varchar',
-        length: 15,
-        default: '',
-        unique: true
-    })
+    @Column()
     phone: string;
 
-    @Column({
-        type: 'varchar',
-        length: 15,
-        default: ''
-    })
+    @Column()
     rol?: 'seller' | 'client';
+}
+
+@Entity(tableName, {
+    synchronize: false
+})
+export class Session {
+    @PrimaryGeneratedColumn('increment')
+    id: number;
+
+    @Column()
+    verified: boolean;
+
+    @Column()
+    name: string;
+
+    @Column()
+    last_name: string;
+
+    @Column()
+    email: string;
+
+    @Column()
+    photo_url: string;
+
+    @Column()
+    phone: string;
+
+    @Column()
+    rol?: 'seller' | 'client';
+
+    @Column()
+    deleted_at?: Date;
 }

@@ -1,7 +1,8 @@
 
 import * as path from "path";
-import { Shop } from "src/entities/shop.entity";
-import { Owner, User } from "src/entities/user.entity";
+import { Product, ProductLite } from "src/entities/product.entity";
+import { Shop, ShopLite } from "src/entities/shop.entity";
+import { Owner, Session, User } from "src/entities/user.entity";
 import { Configuration } from "src/types/configuration";
 
 export default function getConfig(): Configuration {
@@ -23,8 +24,8 @@ export default function getConfig(): Configuration {
             password: process.env.DATABASE_PASSWORD || '',
             database: process.env.DATABASE_NAME || '',
             synchronize: process.env.DATABASE_SYNC === 'true',
-            
-            entities: [User, Owner, Shop],
+
+            entities: [User, Owner, Session, Shop, ShopLite, Product, ProductLite],
             logging: 'all'
         },
         aws: {

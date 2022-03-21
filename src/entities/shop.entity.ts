@@ -20,7 +20,7 @@ export class Shop {
 
     @OneToOne(() => Owner, (user: Owner) => `${user.name} ${user.last_name}`, {
         eager: false,
-        nullable: false,
+        nullable: false
     })
     @JoinColumn({ name: 'owner_id' })
     owner?: Owner;
@@ -51,3 +51,32 @@ export class Shop {
     @DeleteDateColumn({ type: 'timestamptz' })
     deleted_at?: Date;
 }
+
+@Entity({
+    name: 'shops',
+    synchronize: false
+})
+export class ShopLite {
+    @PrimaryGeneratedColumn('increment')
+    id?: number;
+
+    @OneToOne(() => Owner, (user: Owner) => `${user.name} ${user.last_name}`, {
+        eager: false,
+        nullable: false,
+    })
+    @JoinColumn({ name: 'owner_id' })
+    owner?: Owner;
+
+    @Column()
+    identify: string;
+
+    @Column()
+    name: string;
+
+    @Column()
+    description: string;
+
+    @Column()
+    deleted_at?: Date;
+}
+

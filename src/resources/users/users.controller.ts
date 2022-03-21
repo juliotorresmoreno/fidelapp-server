@@ -8,11 +8,12 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+
     constructor(private readonly usersService: UsersService) { }
 
     @Patch('profile')
+    @Authentication('seller', 'client')
     @UsePipes(new JoiValidationPipe(updateProfileSchema))
-    @Authentication()
     patchProfile(@Request() req: RequestWithSession, @Body() payload: UpdateProfileDto) {
         return this.usersService.updateProfile(req.session.id, payload);
     }

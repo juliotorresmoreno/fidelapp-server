@@ -112,3 +112,40 @@ Authorization: Bearer {{authorization}}
 {
     "shop_id": 1
 }
+
+###
+POST {{host}}/users/subscribe
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "shop_id": 1
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "sku": "carro",
+    "name": "Carro",
+    "description": "carro ultimo modelo",
+    "shop_id": 1
+}
+
+###
+GET {{host}}/products
+Authorization: Bearer {{authorization}}
+
+###
+PATCH {{host}}/products/5
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "sku": "carro",
+    "name": "Carro2",
+    "description": "carro ultimo modelo"
+}
+

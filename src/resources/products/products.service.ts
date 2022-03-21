@@ -1,25 +1,50 @@
+
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto, UpdateProductDto } from './products.dto';
+import { DatabaseException } from 'src/common/exception';
+import { Product, ProductLite } from 'src/entities/product.entity';
+import { Connection, FindConditions, FindManyOptions, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class ProductsService {
-    create(createProductDto: CreateProductDto) {
-        return 'This action adds a new product';
+    private productsRepository: Repository<ProductLite>;
+
+    constructor(private readonly connection: Connection) {
+        this.productsRepository = this.connection.getRepository(ProductLite);
     }
 
-    findAll() {
-        return `This action returns all products`;
+    create(payload: Product) {
+        return this.productsRepository.save(payload).then(() => void(0));
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} product`;
+    findAll(query: FindManyOptions<ProductLite> = {}) {
+        return this.productsRepository.findAndCount(query)
+            .catch(() => {
+                throw new DatabaseException();
+            });
     }
 
-    update(id: number, updateProductDto: UpdateProductDto) {
-        return `This action updates a #${id} product`;
+    findOne(query: FindManyOptions<ProductLite> = {}) {
+        return this.productsRepository.findOne(query)
+            .catch(() => {
+                throw new DatabaseException();
+            });
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} product`;
+    update(conditions: FindConditions<Product>, payload: QueryDeepPartialEntity<Product>) {
+        return this.productsRepository.update(conditions, payload)
+            .then(() => this.findOne({
+                where: conditions
+            }))
+            .catch(() => {
+                throw new DatabaseException();
+            });
+    }
+
+    remove(conditions: FindConditions<Product>) {
+        return this.productsRepository.softDelete(conditions)
+            .catch(() => {
+                throw new DatabaseException();
+            });
     }
 }

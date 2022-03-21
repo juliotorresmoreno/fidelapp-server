@@ -1,8 +1,8 @@
 
 import { Request } from "express";
-import { User } from "src/entities/user.entity";
+import { Session } from "src/entities/user.entity";
 
 export type RequestWithSession = {
-    session: User;
+    session: Session;
     token: string;
 } & Request;

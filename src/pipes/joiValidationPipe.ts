@@ -15,6 +15,8 @@ export class JoiValidationPipe implements PipeTransform {
     constructor(private schema: ObjectSchema) { }
 
     transform(value: TransformValues) {
+        if (typeof value !== 'object') return value;
+        
         const { error } = this.schema.validate(value);
         if (error) {
             throw new createHttpError.BadRequest(
