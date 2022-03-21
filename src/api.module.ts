@@ -12,6 +12,7 @@ import { HbsRemplateModule } from './components/hbs-remplate/hbs-remplate.module
 import { QrCodeModule } from './resources/qr-code/qr-code.module';
 import { ShopsModule } from './resources/shops/shops.module';
 import { ProductsModule } from './resources/products/products.module';
+import { UserShopsAccountsModule } from './resources/user_shops_accounts/user_shops_accounts.module';
 
 @Module({
     imports: [
@@ -26,7 +27,8 @@ import { ProductsModule } from './resources/products/products.module';
         AwsSnsService,
         AwsSesModule,
         HbsRemplateModule,
-        ProductsModule
+        ProductsModule,
+        UserShopsAccountsModule
     ],
     providers: [SecureService]
 })
