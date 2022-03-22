@@ -600,9 +600,9 @@
     tslib "2.3.1"
     uuid "8.3.2"
 
-"@nestjs/mapped-types@*", "@nestjs/mapped-types@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-1.0.0.tgz"
+"@nestjs/mapped-types@*", "@nestjs/mapped-types@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.0.1.tgz#78b62041c7a407db4a90eb140567321602bed18e"
 
 "@nestjs/platform-express@^8.4.1":
   version "8.4.1"
@@ -624,11 +624,11 @@
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
 
-"@nestjs/swagger@^5.1.5":
-  version "5.1.5"
-  resolved "https://registry.npmjs.org/@nestjs/swagger/-/swagger-5.1.5.tgz"
+"@nestjs/swagger@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-5.2.0.tgz#7fbb66426fab9790f75e906e7d384aacef386a28"
   dependencies:
-    "@nestjs/mapped-types" "1.0.0"
+    "@nestjs/mapped-types" "1.0.1"
     lodash "4.17.21"
     path-to-regexp "3.2.0"
 
