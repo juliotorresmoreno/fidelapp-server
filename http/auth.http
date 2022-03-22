@@ -1,7 +1,7 @@
 
 @host=http://localhost:5001
 
-@authorization=OyFMNJkozeC0ZAwzhrBhiMwtcrqtfRnXyJcgX8XpPUxaqGh6sSwtjzpLcF5l4rs4QlvgEKG4v7MqralnuWDk7wVVb6wU4wVdfQsRWzI15an107QQVRsVkm7uustuMgql
+@authorization=0FkVxU7XxRDeE6bsTOHhfWlIxFH0wmES63fk3CdTdX5Fs5ZDqY9WXYbreJxs2r42bRTvc1lHlAsTv4Yt98Gr4ILYkob4OTPSGxuBFfABBgr5bT6O7OPaqYBlZOAIuF3d
 
 ###
 GET {{host}}/health
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
     "phone": "+573013819315",
-    "code": "DG6Trd"
+    "code": "I6MwEV"
 }
 
 ###
@@ -105,24 +105,6 @@ Content-Type: application/json
 Authorization: Bearer {{authorization}}
 
 ###
-POST {{host}}/users/subscribe
-Content-Type: application/json
-Authorization: Bearer {{authorization}}
-
-{
-    "shop_id": 1
-}
-
-###
-POST {{host}}/users/subscribe
-Content-Type: application/json
-Authorization: Bearer {{authorization}}
-
-{
-    "shop_id": 1
-}
-
-###
 POST {{host}}/products
 Content-Type: application/json
 Authorization: Bearer {{authorization}}
@@ -131,7 +113,8 @@ Authorization: Bearer {{authorization}}
     "sku": "carro",
     "name": "Carro",
     "description": "carro ultimo modelo",
-    "shop_id": 1
+    "shop_id": 1,
+    "price": 10000000
 }
 
 ###
@@ -149,3 +132,33 @@ Authorization: Bearer {{authorization}}
     "description": "carro ultimo modelo"
 }
 
+###
+POST {{host}}/user-shops-accounts/subscribe
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "shop_id": 1
+}
+
+###
+POST {{host}}/user-shops-accounts/add-balance
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "shop_id": 1,
+    "balance": 50000000,
+    "client_id": 1
+}
+
+###
+POST {{host}}/user-shops-accounts/buy
+Content-Type: application/json
+Authorization: Bearer {{authorization}}
+
+{
+    "shop_id": 1,
+    "quantity": 1,
+    "product_id": 2
+}

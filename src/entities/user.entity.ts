@@ -107,6 +107,9 @@ export class Owner {
 
     @Column()
     rol?: 'seller' | 'client';
+
+    @Column()
+    deleted_at?: Date;
 }
 
 @Entity(tableName, {

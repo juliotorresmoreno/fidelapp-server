@@ -1,7 +1,7 @@
 import { DatabaseException } from "src/common/exception";
 import {
     BeforeInsert, BeforeUpdate,
-    Column, CreateDateColumn, DeleteDateColumn,
+    Column, CreateDateColumn, DeepPartial, DeleteDateColumn,
     Entity, JoinColumn, ManyToOne,
     PrimaryGeneratedColumn, UpdateDateColumn
 } from "typeorm";
@@ -9,7 +9,7 @@ import { Product } from "./product.entity";
 import { Owner } from "./user.entity";
 import { UserShopsAccount } from "./user_shops_account.entity";
 
-const tableName = 'user_shops_accounts';
+const tableName = 'history';
 
 @Entity(tableName, {
     synchronize: true
@@ -34,26 +34,28 @@ export class History {
 
     @ManyToOne(() => Product, {
         eager: false,
-        nullable: false
+        nullable: true
     })
     @JoinColumn({ name: 'product_id' })
     product?: Product;
 
     @Column({
-        type: 'decimal',
-        precision: 2
+        enum: ['addition', 'subtraction']
+    })
+    type: 'addition' | 'subtraction';
+
+    @Column({
+        type: 'decimal'
     })
     quantity: number;
 
     @Column({
-        type: 'decimal',
-        precision: 2
+        type: 'decimal'
     })
     unitPrice: number;
 
     @Column({
-        type: 'decimal',
-        precision: 2
+        type: 'decimal'
     })
     total: number;
 
@@ -70,7 +72,7 @@ export class History {
     @BeforeUpdate()
     validate() {
         if (this.unitPrice * this.quantity !== this.total) {
-            throw new DatabaseException(null, 'El monto total no es valido!.');
+            throw new DatabaseException('El monto total no es valido!.');
         }
     }
 }

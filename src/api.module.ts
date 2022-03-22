@@ -13,6 +13,7 @@ import { QrCodeModule } from './resources/qr-code/qr-code.module';
 import { ShopsModule } from './resources/shops/shops.module';
 import { ProductsModule } from './resources/products/products.module';
 import { UserShopsAccountsModule } from './resources/user_shops_accounts/user_shops_accounts.module';
+import { HistoryModule } from './resources/history/history.module';
 
 @Module({
     imports: [
@@ -28,7 +29,8 @@ import { UserShopsAccountsModule } from './resources/user_shops_accounts/user_sh
         AwsSesModule,
         HbsRemplateModule,
         ProductsModule,
-        UserShopsAccountsModule
+        UserShopsAccountsModule,
+        HistoryModule
     ],
     providers: [SecureService]
 })

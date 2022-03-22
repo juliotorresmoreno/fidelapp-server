@@ -1,5 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
+import * as createHttpError from 'http-errors';
 import { DatabaseException } from 'src/common/exception';
 import { Shop } from 'src/entities/shop.entity';
 import { Session } from 'src/entities/user.entity';
@@ -14,22 +15,27 @@ export class ShopService {
         this.shopsRepository = this.connection.getRepository(Shop);
     }
 
-    create(createShopDto: Shop | { owner: Session }) {
-        return this.shopsRepository.save({
-            ...createShopDto
-        });
+    create(payload: Shop | { owner: Session }) {
+        return this.shopsRepository.save(payload)
+            .catch(err => {
+                if (err.routine === '_bt_check_unique') {
+                    throw new createHttpError.BadRequest('Usted ya tiene una tienda registrada!');
+                }
+            });
     }
 
     findAll(query: FindManyOptions<Shop> = {}) {
         return this.shopsRepository.findAndCount(query)
-            .catch(() => {
+            .catch((err) => {
+                console.trace(err);
                 throw new DatabaseException();
             });
     }
 
     findOne(query: FindManyOptions<Shop> = {}) {
         return this.shopsRepository.findOne(query)
-            .catch(() => {
+            .catch((err) => {
+                console.trace(err);
                 throw new DatabaseException();
             });
     }
@@ -39,14 +45,16 @@ export class ShopService {
             .then(() => this.findOne({
                 where: conditions
             }))
-            .catch(() => {
+            .catch((err) => {
+                console.trace(err);
                 throw new DatabaseException();
             });
     }
 
     remove(conditions: FindConditions<Shop>) {
         return this.shopsRepository.softDelete(conditions)
-            .catch(() => {
+            .catch((err) => {
+                console.trace(err);
                 throw new DatabaseException();
             });
     }

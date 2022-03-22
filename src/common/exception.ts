@@ -1,7 +1,7 @@
-import { InternalServerErrorException } from "@nestjs/common";
+import * as createHttpError from "http-errors";
 
-export class DatabaseException extends InternalServerErrorException {
-    constructor(objectOrError?: string | object | any, description?: string) {
-        super(objectOrError, description);
+export class DatabaseException extends createHttpError.InternalServerError {
+    constructor(description?: string) {
+        super(description);
     }
 }

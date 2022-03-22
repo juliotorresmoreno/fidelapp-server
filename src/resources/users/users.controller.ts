@@ -12,16 +12,9 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     @Patch('profile')
-    @Authentication('seller', 'client')
+    @Authentication()
     @UsePipes(new JoiValidationPipe(updateProfileSchema))
     patchProfile(@Request() req: RequestWithSession, @Body() payload: UpdateProfileDto) {
         return this.usersService.updateProfile(req.session.id, payload);
-    }
-
-    @Post('subscribe')
-    @Authentication('client')
-    @UsePipes(new JoiValidationPipe(registerShopSchema))
-    subscribe(@Request() { session }: RequestWithSession, @Param('id') id: string, @Body() payload: RegisterShopDto) {
-        return this.usersService.registerShop(session.id, payload);
     }
 }

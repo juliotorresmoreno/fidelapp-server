@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ShopLite } from "./shop.entity";
-import { Owner } from "./user.entity";
+import { Owner, User } from "./user.entity";
 
 const tableName = 'user_shops_accounts';
 
@@ -16,18 +16,32 @@ export class UserShopsAccount {
         nullable: false
     })
     @JoinColumn({ name: 'shop_id' })
-    shop?: ShopLite;
+    shop: ShopLite;
+
+    @ManyToOne(() => User, (user: User) => `${user.name} ${user.last_name}`, {
+        eager: false,
+        nullable: false
+    })
+    @JoinColumn({ name: 'client_id' })
+    client: User;
 
     @ManyToOne(() => Owner, (user: Owner) => `${user.name} ${user.last_name}`, {
         eager: false,
         nullable: false
     })
     @JoinColumn({ name: 'owner_id' })
-    owner?: Owner;
+    owner: Owner;
 
     @Column({
-        type: 'decimal',
-        precision: 2
+        type: 'integer',
+        transformer: {
+            to: (value: number) => {
+                return Number.parseInt(value as any, 10);
+            },
+            from: (value) => {
+                return Number.parseInt(value as any, 10);
+            }
+        }
     })
     balance: number;
 
@@ -36,4 +50,7 @@ export class UserShopsAccount {
 
     @UpdateDateColumn({ type: 'timestamptz' })
     updated_at: Date;
+
+    @DeleteDateColumn({ type: 'timestamptz' })
+    deleted_at?: Date;
 }

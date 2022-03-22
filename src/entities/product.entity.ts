@@ -44,6 +44,11 @@ export class Product {
     })
     name: string;
 
+    @Column({
+        type: 'integer'
+    })
+    price: number;
+
     @Column({ type: 'varchar', length: 350 })
     description: string;
 
@@ -90,6 +95,9 @@ export class ProductLite {
 
     @Column()
     description: string;
+
+    @Column()
+    price: number;
 
     @Column()
     deleted_at?: Date;

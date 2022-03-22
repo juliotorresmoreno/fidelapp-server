@@ -1,8 +1,10 @@
 
 import * as path from "path";
+import { History } from "src/entities/history.entity";
 import { Product, ProductLite } from "src/entities/product.entity";
 import { Shop, ShopLite } from "src/entities/shop.entity";
 import { Owner, Session, User } from "src/entities/user.entity";
+import { UserShopsAccount } from "src/entities/user_shops_account.entity";
 import { Configuration } from "src/types/configuration";
 
 export default function getConfig(): Configuration {
@@ -25,9 +27,19 @@ export default function getConfig(): Configuration {
             database: process.env.DATABASE_NAME || '',
             synchronize: process.env.DATABASE_SYNC === 'true',
 
-            entities: [User, Owner, Session, Shop, ShopLite, Product, ProductLite],
+            entities: [
+                User,
+                Owner,
+                Session,
+                Shop,
+                ShopLite,
+                Product,
+                ProductLite,
+                UserShopsAccount,
+                History
+            ],
             logging: 'all'
-        },
+        } as any,
         aws: {
             region: process.env.AWS_DEFAULT_REGION,
             credentials: {

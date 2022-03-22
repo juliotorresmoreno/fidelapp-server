@@ -15,21 +15,4 @@ export class UsersService {
     async updateProfile(id: number, payload: UpdateProfileDto) {
         this.usersRepository.update({ id }, payload);
     }
-
-    async registerShop(id: number, payload: RegisterShopDto) {
-        const user = await this.usersRepository.findOne({
-            select: [
-                'id',
-            ],
-            where: { id, deleted_at: null },
-            relations: ['shops']
-        });
-        await this.usersRepository.save({
-            id,
-            shops: [
-                ...(user.shops || []),
-                { id: payload.shop_id }
-            ]
-        });
-    }
 }
