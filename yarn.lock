@@ -632,12 +632,11 @@
     lodash "4.17.21"
     path-to-regexp "3.2.0"
 
-"@nestjs/testing@^8.0.0":
-  version "8.2.2"
-  resolved "https://registry.npmjs.org/@nestjs/testing/-/testing-8.2.2.tgz"
+"@nestjs/testing@^8.4.7":
+  version "8.4.7"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.4.7.tgz#fe4f356c0e081e25fe8c899a65e91dd88947fd13"
   dependencies:
-    optional "0.1.4"
-    tslib "2.3.1"
+    tslib "2.4.0"
 
 "@nestjs/typeorm@^8.0.2":
   version "8.0.3"
@@ -3629,10 +3628,6 @@ onetime@^5.1.0, onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-optional@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.npmjs.org/optional/-/optional-0.1.4.tgz"
-
 optionator@^0.8.1:
   version "0.8.3"
   resolved "https://registry.npmjs.org/optionator/-/optionator-0.8.3.tgz"
@@ -4603,9 +4598,13 @@ tsconfig-paths@3.14.0, tsconfig-paths@^3.10.1, tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@2.3.1, tslib@^2.1.0:
+tslib@2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
+
+tslib@2.4.0, tslib@^2.1.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
 
 tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
